@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¡Sorpresa Especial! 🎉</title>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gluten:wght@700&display=swap" rel="stylesheet">
     
     <style>
-        /* Fondo psicodélico con animación de colores constantes */
+        /* Fondo psicodélico */
         body {
             margin: 0;
             padding: 0;
@@ -17,7 +17,7 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Alinea el contenido arriba */
+            justify-content: flex-start;
             align-items: center;
             overflow: hidden;
             font-family: 'Arial Black', Impact, sans-serif;
@@ -31,10 +31,11 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Contenedor principal para el texto (Ocupa la mitad superior) */
-        .contenedor-texto {
-            height: 50vh; /* Mitad superior estricta */
+        /* Contenedor del contenido superior */
+        .contenedor-contenido {
+            height: 55vh; /* Un poco más alto para darle espacio a la foto */
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
@@ -48,7 +49,7 @@
             100% { filter: drop-shadow(0 0 35px #00f0ff) drop-shadow(0 0 45px #7f00ff); }
         }
 
-        /* Estilo base para los textos con efecto vibración */
+        /* Estilo base para los textos */
         .texto-cambiante {
             font-size: 3.2rem;
             color: #fff;
@@ -65,21 +66,34 @@
             100% { transform: translate(-1px, -2px) rotate(1deg); }
         }
 
-        /* Clase especial para cuando aparezca TQQJ */
-        .fuente-especial {
-            font-family: 'Caveat', cursive !important;
-            font-size: 5.5rem !important;
+        /* Nueva clase limpia para TQQJ (Sin heredar Arial Black, evita el parpadeo) */
+        .fuente-burbuja {
+            font-family: 'Gluten', cursive !important;
+            font-size: 4.5rem !important;
             text-transform: none !important;
             letter-spacing: 0px !important;
-            text-shadow: 3px 3px 0px #ff0055, -2px -2px 0px #7f00ff !important;
+            text-shadow: 4px 4px 0px #00f0ff, -3px -3px 0px #7f00ff !important;
+            animation: vibrar 0.15s linear infinite;
         }
 
-        /* El botón interactivo (Se moverá solo en la mitad inferior) */
+        /* Estilo para la imagen sorpresa del final */
+        .foto-sorpresa {
+            display: none; /* Oculta por defecto */
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%; /* Foto redonda bonita */
+            border: 5px solid #fff;
+            box-shadow: 0 0 20px #00ff66;
+            margin-top: 15px;
+        }
+
+        /* El botón interactivo abajo */
         .boton-aleatorio {
             position: absolute;
             z-index: 10;
             padding: 15px 30px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-family: 'Arial Black', sans-serif;
             color: #fff;
             background-color: #00ff66;
@@ -103,7 +117,6 @@
             100% { transform: translateY(-10px); }
         }
 
-        /* Canvas donde se dibujan los corazones */
         canvas {
             position: absolute;
             top: 0;
@@ -119,26 +132,25 @@
 
     <canvas id="corazonesCanvas"></canvas>
 
-    <div class="contenedor-texto">
+    <div class="contenedor-contenido">
         <h1 id="textoPrincipal" class="texto-cambiante">¡FELIZ<br>CUMPLE!</h1>
+        
+        <img id="imagenFinal" src="foto.jpg" alt="Foto Sorpresa" class="foto-sorpresa">
     </div>
 
-    <button id="btnSiguiente" class="boton-aleatorio">¡PÍCAME AQUÍ! 👇</button>
+    <button id="btnSiguiente" class="boton-aleatorio">¡DALE DURO AQUÍ! 💥</button>
 
     <script>
-        // --- LÓGICA DE INTERACCIÓN Y TEXTOS ---
         const textoPrincipal = document.getElementById("textoPrincipal");
         const btnSiguiente = document.getElementById("btnSiguiente");
+        const imagenFinal = document.getElementById("imagenFinal");
         
         let faseActual = 0;
 
-        // Función para mover el botón aleatoriamente SOLO en la mitad inferior de la pantalla
         function moverBotonAleatoriamente() {
-            // El rango del alto ahora empieza a mitad de pantalla (window.innerHeight / 2)
             const minTop = window.innerHeight / 2;
-            const maxTop = window.innerHeight - 80; // 80px de margen para que no se salga por abajo
-            
-            const maxLeft = window.innerWidth - 160; // Margen lateral para el ancho del botón
+            const maxTop = window.innerHeight - 80;
+            const maxLeft = window.innerWidth - 180;
 
             const randomTop = Math.floor(Math.random() * (maxTop - minTop)) + minTop;
             const randomLeft = Math.max(20, Math.floor(Math.random() * maxLeft));
@@ -147,29 +159,28 @@
             btnSiguiente.style.left = randomLeft + "px";
         }
 
-        // Colocar el botón abajo al cargar la página
         moverBotonAleatoriamente();
 
-        // Al hacer clic en el botón... ¡Ahora sí funciona!
         btnSiguiente.addEventListener("click", () => {
             faseActual++;
 
             if (faseActual === 1) {
-                // Cambia a "MI MUCHACHONA <3"
+                // Fase 1: Cambia a "MI MUCHACHONA <3"
                 textoPrincipal.innerHTML = "MI<br>MUCHACHONA<br>&lt;3";
                 btnSiguiente.innerHTML = "¡OTRA VEZ! 💥";
                 moverBotonAleatoriamente();
             } 
             else if (faseActual === 2) {
-                // Cambia al mensaje final y se esconde el botón
+                // Fase 2: Cambia a "TQQJ", aplica la nueva fuente al tiro y muestra la foto
+                textoPrincipal.className = "fuente-burbuja"; // Cambia la clase por completo para evitar parpadeos
                 textoPrincipal.innerHTML = "TQQJ";
-                textoPrincipal.classList.add("fuente-especial");
-                btnSiguiente.style.display = "none"; 
+                
+                imagenFinal.style.display = "block"; // Revela la imagen
+                btnSiguiente.style.display = "none"; // Desaparece el botón
             }
         });
 
-
-        // --- LÓGICA DE LOS CORAZONES ROJOS ---
+        // --- SISTEMA DE CORAZONES ---
         const canvas = document.getElementById("corazonesCanvas");
         const ctx = canvas.getContext("2d");
         let ancho = canvas.width = window.innerWidth;
@@ -206,14 +217,12 @@
                 ctx.globalAlpha = this.opacidad;
                 ctx.fillStyle = "#ff0000";
                 ctx.beginPath();
-                
                 let topY = this.y - this.tamano / 2;
                 ctx.moveTo(this.x, topY + this.tamano / 4);
                 ctx.bezierCurveTo(this.x, topY, this.x - this.tamano / 2, topY, this.x - this.tamano / 2, topY + this.tamano / 4);
                 ctx.bezierCurveTo(this.x - this.tamano / 2, topY + (this.tamano * 5) / 8, this.x, topY + (this.tamano * 7) / 8, this.x, this.y + this.tamano / 2);
                 ctx.bezierCurveTo(this.x, topY + (this.tamano * 7) / 8, this.x + this.tamano / 2, topY + (this.tamano * 5) / 8, this.x + this.tamano / 2, topY + this.tamano / 4);
                 ctx.bezierCurveTo(this.x + this.tamano / 2, topY, this.x, topY, this.x, topY + this.tamano / 4);
-                
                 ctx.fill();
                 ctx.restore();
             }
