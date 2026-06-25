@@ -10,13 +10,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Gluten:wght@700&display=swap" rel="stylesheet">
     
     <style>
-        /* Fondo psicodélico constante */
+        /* MODIFICADO: Fondo negro puro absoluto */
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(45deg, #ff0055, #7f00ff, #00f0ff, #ff0055);
-            background-size: 400% 400%;
-            animation: fondoLoco 8s ease infinite;
+            background-color: #000000;
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -26,12 +24,6 @@
             font-family: 'Arial Black', Impact, sans-serif;
             text-align: center;
             position: relative;
-        }
-
-        @keyframes fondoLoco {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         /* CONTENEDOR CENTRAL */
@@ -48,18 +40,20 @@
             box-sizing: border-box;
         }
 
+        /* Destello y luces de neón para que el texto resalte sobre el negro */
         .luces-texto {
-            animation: pulsoLuces 0.5s linear infinite alternate;
+            animation: pulsoNeon 0.6s linear infinite alternate;
         }
 
-        @keyframes pulsoLuces {
-            0% { filter: drop-shadow(0 0 15px #fff) drop-shadow(0 0 25px #ff0055); }
-            100% { filter: drop-shadow(0 0 35px #00f0ff) drop-shadow(0 0 45px #7f00ff); }
+        @keyframes pulsoNeon {
+            0% { filter: drop-shadow(0 0 10px #ff0055) drop-shadow(0 0 20px #ff0055); }
+            100% { filter: drop-shadow(0 0 20px #00f0ff) drop-shadow(0 0 35px #00f0ff); }
         }
 
+        /* Texto fiestero con sombras de color ultra llamativas */
         .texto-cambiante {
             font-size: 2.8rem;
-            color: #fff;
+            color: #ffffff;
             text-transform: uppercase;
             margin: 0;
             letter-spacing: 2px;
@@ -69,21 +63,23 @@
         }
 
         @keyframes vibrar {
-            0% { transform: translate(2px, 1px) rotate(0deg); }
-            100% { transform: translate(-1px, -2px) rotate(1deg); }
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            100% { transform: translate(-1px, -1px) rotate(0.5deg); }
         }
 
+        /* TQQJ en estilo neón burbuja brillante */
         .fuente-burbuja {
             font-family: 'Gluten', cursive !important;
             font-size: 4.2rem !important;
             text-transform: none !important;
             letter-spacing: 0px !important;
-            text-shadow: 4px 4px 0px #00f0ff, -3px -3px 0px #7f00ff !important;
+            color: #ffffff !important;
+            text-shadow: 4px 4px 0px #00f0ff, -3px -3px 0px #7f00ff, 0 0 20px #00f0ff !important;
             animation: vibrar 0.15s linear infinite;
             margin: 0;
         }
 
-        /* Marco redondo gigante */
+        /* Marco redondo gigante que resalta sobre el fondo oscuro */
         .foto-sorpresa {
             display: none;
             width: 70vw;         
@@ -92,17 +88,17 @@
             max-height: 320px;
             object-fit: cover;   
             border-radius: 50%;  
-            border: 6px solid #fff;
-            box-shadow: 0 0 30px #00ff66, 0 0 15px #fff;
+            border: 6px solid #ffffff;
+            box-shadow: 0 0 35px #00ff66, 0 0 15px #ffffff;
             animation: pulsoFoto 1s ease-in-out infinite alternate;
         }
 
         @keyframes pulsoFoto {
-            0% { transform: scale(1); filter: drop-shadow(0 0 10px #00ff66); }
-            100% { transform: scale(1.02); filter: drop-shadow(0 0 25px #00ffff); }
+            0% { transform: scale(1); filter: drop-shadow(0 0 15px #00ff66); }
+            100% { transform: scale(1.02); filter: drop-shadow(0 0 30px #00ffff); }
         }
 
-        /* Botón interactivo */
+        /* Botón interactivo principal */
         .boton-aleatorio {
             position: absolute;
             z-index: 3; 
@@ -114,7 +110,7 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0px 0px 20px #00ff66, inset 0 0 10px #fff;
+            box-shadow: 0px 0px 25px #00ff66, inset 0 0 10px #fff;
             text-shadow: 1px 1px 2px #000;
             transition: all 0.2s ease;
             animation: flotarBoton 2s ease-in-out infinite alternate;
@@ -131,29 +127,38 @@
             100% { transform: translateY(-10px); }
         }
 
-        .boton-repetir {
+        /* Botones flotantes inferiores de control */
+        .boton-flotante-control {
             display: none; 
             position: absolute;
             bottom: 60px;
-            right: 25px;
             z-index: 15; 
-            width: 52px;
-            height: 52px;
+            width: 54px;
+            height: 54px;
             font-size: 1.6rem;
-            background-color: rgba(255, 255, 255, 0.4);
-            border: 2px solid rgba(255, 255, 255, 0.7);
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.6);
             border-radius: 50%;
             color: white;
             cursor: pointer;
             backdrop-filter: blur(5px);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
             display: flex;
             justify-content: center;
             align-items: center;
             transition: all 0.2s ease;
         }
 
-        /* Canvas arriba para la tridimensionalidad global */
+        .boton-flotante-control:active {
+            transform: scale(0.85);
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Posiciones separadas para los botones de abajo */
+        #btnRepetir { right: 30px; }
+        #btnMute { left: 30px; } /* Botón de la bocina a la izquierda */
+
+        /* Canvas superior (Cruce 3D de corazones) */
         canvas {
             position: absolute;
             top: 0;
@@ -178,25 +183,31 @@
 
     <button id="btnSiguiente" class="boton-aleatorio">¡DALE DURO AQUÍ! 💥</button>
 
-    <button id="btnRepetir" class="boton-repetir" title="Repetir">🔄</button>
+    <button id="btnMute" class="boton-flotante-control" title="Silenciar/Reproducir">🔊</button>
+
+    <button id="btnRepetir" class="boton-flotante-control" title="Repetir">🔄</button>
 
     <script>
         const textoPrincipal = document.getElementById("textoPrincipal");
         const btnSiguiente = document.getElementById("btnSiguiente");
         const imagenFinal = document.getElementById("imagenFinal");
         const btnRepetir = document.getElementById("btnRepetir");
+        const btnMute = document.getElementById("btnMute");
         
         // --- SISTEMA DE AUDIO ---
         const musica = new Audio();
-        musica.src = "cancion.mp3"; // Reemplaza aquí con el nombre de tu archivo o URL musical
+        musica.src = "cancion.mp3"; // Recuerda tener tu archivo "cancion.mp3" en la carpeta
         musica.loop = true;
 
         let faseActual = 0;
+        
+        // Ocultar controles al inicio
         btnRepetir.style.display = "none";
+        btnMute.style.display = "none";
 
         function moverBotonAleatoriamente() {
             const minTop = window.innerHeight / 2;
-            const maxTop = window.innerHeight - 120;
+            const maxTop = window.innerHeight - 140;
             const maxLeft = window.innerWidth - 180;
 
             const randomTop = Math.floor(Math.random() * (maxTop - minTop)) + minTop;
@@ -222,10 +233,25 @@
                 
                 imagenFinal.style.display = "block"; 
                 btnSiguiente.style.display = "none"; 
-                btnRepetir.style.display = "flex"; 
                 
-                // ¡REPRODUCIR MÚSICA EN EL MOMENTO SORPRESA!
-                musica.play().catch(error => console.log("El navegador bloqueó el audio inicial:", error));
+                // Mostrar botones de control al final
+                btnRepetir.style.display = "flex"; 
+                btnMute.style.display = "flex"; 
+                btnMute.innerHTML = "🔊"; // Inicia sonando
+                
+                // Reproducir canción
+                musica.play().catch(error => console.log("Audio bloqueado temporalmente:", error));
+            }
+        });
+
+        // Lógica del botón de la Bocina (Mute / Unmute)
+        btnMute.addEventListener("click", () => {
+            if (musica.paused) {
+                musica.play();
+                btnMute.innerHTML = "🔊";
+            } else {
+                musica.pause();
+                btnMute.innerHTML = "🔇";
             }
         });
 
@@ -234,17 +260,21 @@
             textoPrincipal.className = "texto-cambiante";
             textoPrincipal.innerHTML = "¡FELIZ<br>CUMPLEAÑOS!";
             imagenFinal.style.display = "none";
+            
+            // Ocultar botones flotantes
             btnRepetir.style.display = "none";
+            btnMute.style.display = "none";
+            
             btnSiguiente.style.display = "block";
             btnSiguiente.innerHTML = "¡DALE DURO AQUÍ! 💥";
             moverBotonAleatoriamente();
             
-            // Pausar y reiniciar música al reiniciar
+            // Apagar música por completo
             musica.pause();
             musica.currentTime = 0;
         });
 
-        // --- SISTEMA DE CORAZONES FLOTANTES TOTALES (SIN GRAVEDAD) ---
+        // --- SISTEMA DE CORAZONES FLOTANTES 3D TOTALES ---
         const canvas = document.getElementById("corazonesCanvas");
         const ctx = canvas.getContext("2d");
         let ancho = canvas.width = window.innerWidth;
@@ -255,32 +285,25 @@
         class Corazon {
             constructor(inicializarEsparcidos = false) {
                 this.x = Math.random() * ancho;
-                
-                // Si arranca, se distribuyen equitativamente en toda la pantalla
                 if (inicializarEsparcidos) {
                     this.y = Math.random() * alto;
                 } else {
-                    // Si reaparecen, viajan desde abajo o los lados
                     this.y = alto + Math.random() * 60;
                 }
                 
                 this.z = Math.random() * 0.7 + 0.3; 
-                this.velocidadZ = Math.random() * 0.003 + 0.002; // Velocidad de acercamiento 3D
-                
+                this.velocidadZ = Math.random() * 0.003 + 0.002; 
                 this.tamanoBase = Math.random() * 7 + 5; 
-                
-                // Velocidades constantes para expandirse por todos lados
-                this.velocidadX = Math.random() * 4 - 2;  // Se mueven a la izquierda y derecha de forma fluida
-                this.velocidadY = Math.random() * -3 - 2;  // Vuelan consistentemente hacia arriba
+                this.velocidadX = Math.random() * 4 - 2;  
+                this.velocidadY = Math.random() * -3 - 2;  
                 this.opacidad = Math.random() * 0.4 + 0.6;
             }
 
             actualizar() {
                 this.z -= this.velocidadZ;
                 this.x += this.velocidadX;
-                this.y += this.velocidadY; // Sin gravedad, no frena; cruza toda la pantalla libremente
+                this.y += this.velocidadY; 
 
-                // Reinicio limpio cuando escapan de los límites visuales
                 if (this.z <= 0.08 || this.y < -100 || this.x < -100 || this.x > ancho + 100) {
                     this.x = Math.random() * ancho;
                     this.y = alto + Math.random() * 40;
@@ -294,7 +317,7 @@
                 ctx.save();
                 
                 let escala3D = 1 / this.z;
-                let tamanoFinal = this.tamanoBase * Math.min(escala3D, 4.5); // Límite de tamaño cómodo
+                let tamanoFinal = this.tamanoBase * Math.min(escala3D, 4.5); 
                 
                 let alfaFinal = this.opacidad;
                 if (this.z < 0.2) {
@@ -302,10 +325,10 @@
                 }
 
                 ctx.globalAlpha = Math.max(0, alfaFinal);
-                ctx.fillStyle = "#ff0000";
+                ctx.fillStyle = "#ff0033"; // Un rojo vivo precioso sobre el fondo negro
                 
-                ctx.shadowColor = "rgba(0, 0, 0, 0.15)";
-                ctx.shadowBlur = escala3D * 1.5;
+                ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
+                ctx.shadowBlur = escala3D * 2;
                 ctx.shadowOffsetY = escala3D;
 
                 ctx.beginPath();
@@ -320,7 +343,6 @@
             }
         }
 
-        // 45 corazones dinámicos cubriendo uniformemente la interfaz
         for (let i = 0; i < 45; i++) {
             corazones.push(new Corazon(true)); 
         }
