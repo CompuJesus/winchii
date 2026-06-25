@@ -10,17 +10,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Gluten:wght@700&display=swap" rel="stylesheet">
     
     <style>
-        /* Fondo negro puro absoluto */
-        body {
+        /* MODIFICADO: Se optimizó el overflow para permitir la recarga nativa (pull-to-refresh) */
+        html, body {
             margin: 0;
             padding: 0;
             background-color: #000000;
             height: 100vh;
+            width: 100vw;
+            overflow-x: hidden; /* Evita que se mueva hacia los lados */
+            overflow-y: auto;   /* Permite el comportamiento vertical nativo para recargar */
+        }
+
+        body {
             display: flex;
             flex-direction: column;
             justify-content: center; 
             align-items: center;     
-            overflow: hidden;
             font-family: 'Arial Black', Impact, sans-serif;
             text-align: center;
             position: relative;
@@ -122,7 +127,7 @@
         .boton-flotante-control {
             display: none; 
             position: absolute;
-            bottom: 40px; /* Un poco más abajo para dar más espacio libre en el medio */
+            bottom: 40px; 
             z-index: 15; 
             width: 54px;
             height: 54px;
@@ -150,7 +155,7 @@
 
         /* Canvas superior (Cruce 3D de corazones) */
         canvas {
-            position: absolute;
+            position: fixed; /* MODIFICADO: Cambiado a fixed para que se ancle al fondo real */
             top: 0;
             left: 0;
             width: 100%;
@@ -231,19 +236,16 @@
             elemento.classList.add(animacionElegida);
         }
 
-        // CORREGIDO: Mover el botón asegurando que NUNCA se salga del área visible
         function moverBotonAleatoriamente() {
             const rectBoton = btnSiguiente.getBoundingClientRect();
             const anchoBoton = rectBoton.width || 180;
             const altoBoton = rectBoton.height || 54;
 
-            // Restricciones estrictas para pantallas móviles (márgenes seguros)
-            const minTop = window.innerHeight * 0.55; // Zona centro-inferior
-            const maxTop = window.innerHeight - altoBoton - 130; // Evita el área de los botones fijos de abajo
+            const minTop = window.innerHeight * 0.55; 
+            const maxTop = window.innerHeight - altoBoton - 130; 
             const minLeft = 20;
             const maxLeft = window.innerWidth - anchoBoton - 20;
 
-            // Asegurar que maxTop no sea menor que minTop en pantallas ultra pequeñas
             const rangoTop = maxTop > minTop ? (maxTop - minTop) : 50;
             const randomTop = Math.floor(Math.random() * rangoTop) + (maxTop > minTop ? minTop : maxTop);
             
@@ -254,7 +256,6 @@
             btnSiguiente.style.left = randomLeft + "px";
         }
 
-        // Ejecutar al cargar y reajustar si la pantalla cambia de tamaño (rotación)
         window.addEventListener("load", moverBotonAleatoriamente);
         window.addEventListener("resize", moverBotonAleatoriamente);
 
