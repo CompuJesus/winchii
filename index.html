@@ -24,6 +24,7 @@
             font-family: 'Arial Black', Impact, sans-serif;
             text-align: center;
             position: relative;
+            perspective: 1000px; /* Necesario para los giros 3D de las letras */
         }
 
         /* CONTENEDOR CENTRAL */
@@ -40,9 +41,10 @@
             box-sizing: border-box;
         }
 
-        /* Destello y luces de neón para que el texto resalte sobre el negro */
+        /* Luces de neón constantes de fondo para los textos */
         .luces-texto {
             animation: pulsoNeon 0.6s linear infinite alternate;
+            display: inline-block;
         }
 
         @keyframes pulsoNeon {
@@ -50,7 +52,7 @@
             100% { filter: drop-shadow(0 0 20px #00f0ff) drop-shadow(0 0 35px #00f0ff); }
         }
 
-        /* Texto fiestero con sombras de color ultra llamativas */
+        /* Texto base fiestero */
         .texto-cambiante {
             font-size: 2.8rem;
             color: #ffffff;
@@ -58,13 +60,8 @@
             margin: 0;
             letter-spacing: 2px;
             text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00f0ff;
-            animation: vibrar 0.1s linear infinite;
             line-height: 1.2;
-        }
-
-        @keyframes vibrar {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            100% { transform: translate(-1px, -1px) rotate(0.5deg); }
+            display: inline-block;
         }
 
         /* TQQJ en estilo neón burbuja brillante */
@@ -75,11 +72,11 @@
             letter-spacing: 0px !important;
             color: #ffffff !important;
             text-shadow: 4px 4px 0px #00f0ff, -3px -3px 0px #7f00ff, 0 0 20px #00f0ff !important;
-            animation: vibrar 0.15s linear infinite;
             margin: 0;
+            display: inline-block;
         }
 
-        /* Marco redondo gigante que resalta sobre el fondo oscuro */
+        /* Marco redondo gigante */
         .foto-sorpresa {
             display: none;
             width: 70vw;         
@@ -90,12 +87,6 @@
             border-radius: 50%;  
             border: 6px solid #ffffff;
             box-shadow: 0 0 35px #00ff66, 0 0 15px #ffffff;
-            animation: pulsoFoto 1s ease-in-out infinite alternate;
-        }
-
-        @keyframes pulsoFoto {
-            0% { transform: scale(1); filter: drop-shadow(0 0 15px #00ff66); }
-            100% { transform: scale(1.02); filter: drop-shadow(0 0 30px #00ffff); }
         }
 
         /* Botón interactivo principal */
@@ -112,7 +103,7 @@
             cursor: pointer;
             box-shadow: 0px 0px 25px #00ff66, inset 0 0 10px #fff;
             text-shadow: 1px 1px 2px #000;
-            transition: all 0.2s ease;
+            transition: transform 0.1s ease, background-color 0.2s ease;
             animation: flotarBoton 2s ease-in-out infinite alternate;
         }
 
@@ -154,7 +145,6 @@
             background-color: rgba(255, 255, 255, 0.4);
         }
 
-        /* Posiciones separadas para los botones de abajo */
         #btnRepetir { right: 30px; }
         #btnMute { left: 30px; } 
 
@@ -167,6 +157,33 @@
             height: 100%;
             z-index: 100; 
             pointer-events: none; 
+        }
+
+        /* --- HOJA DE ANIMACIONES DINÁMICAS (SE ASIGNAN POR JAVASCRIPT) --- */
+        .animacion-pop { animation: animPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
+        @keyframes animPop {
+            0% { transform: scale(0); opacity: 0; }
+            70% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .animacion-flip { animation: animFlip 0.6s cubic-bezier(0.4, 0, 0.2, 1) both; }
+        @keyframes animFlip {
+            0% { transform: rotateX(-90deg); opacity: 0; transform-origin: top; }
+            100% { transform: rotateX(0deg); opacity: 1; }
+        }
+
+        .animacion-slide { animation: animSlide 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+        @keyframes animSlide {
+            0% { transform: translateX(-100vw); opacity: 0; }
+            80% { transform: translateX(10px); }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        .animacion-zoom { animation: animZoom 0.6s ease-out both; }
+        @keyframes animZoom {
+            0% { transform: scale(3); filter: blur(10px); opacity: 0; }
+            100% { transform: scale(1); filter: blur(0); opacity: 1; }
         }
     </style>
 </head>
@@ -202,9 +219,24 @@
         let faseActual = 0;
         let musicaActivadaAlgunaVez = false;
         
-        // Ocultar controles al inicio
         btnRepetir.style.display = "none";
         btnMute.style.display = "none";
+
+        // Lista de clases de animación disponibles
+        const animaciones = ['animacion-pop', 'animacion-flip', 'animacion-slide', 'animacion-zoom'];
+
+        // Función para aplicar una animación aleatoria a un elemento
+        function aplicarAnimacionAleatoria(elemento) {
+            // Quitamos cualquier animación previa para poder reiniciar limpia
+            animaciones.forEach(anim => elemento.classList.remove(anim));
+            
+            // Forzar un redibujado rápido del navegador para que reinicie el efecto
+            void elemento.offsetWidth; 
+            
+            // Elegir una al azar
+            const animacionElegida = animaciones[Math.floor(Math.random() * animaciones.length)];
+            elemento.classList.add(animacionElegida);
+        }
 
         function moverBotonAleatoriamente() {
             const minTop = window.innerHeight / 2;
@@ -225,6 +257,9 @@
 
             if (faseActual === 1) {
                 textoPrincipal.innerHTML = "MI<br>MUCHACHONA<br>&lt;3";
+                // ¡Animación aleatoria e impactante al aparecer "MI MUCHACHONA"!
+                aplicarAnimacionAleatoria(textoPrincipal);
+                
                 btnSiguiente.innerHTML = "¡OTRA VEZ! 💥";
                 moverBotonAleatoriamente();
             } 
@@ -232,13 +267,15 @@
                 textoPrincipal.className = "fuente-burbuja"; 
                 textoPrincipal.innerHTML = "TQQJ";
                 
+                // ¡Animación aleatoria para TQQJ y también para la FOTO!
+                aplicarAnimacionAleatoria(textoPrincipal);
                 imagenFinal.style.display = "block"; 
-                btnSiguiente.style.display = "none"; 
+                aplicarAnimacionAleatoria(imagenFinal);
                 
+                btnSiguiente.style.display = "none"; 
                 btnRepetir.style.display = "flex"; 
                 btnMute.style.display = "flex"; 
                 
-                // Si la música nunca ha sonado o no está pausada manualmente, actívala
                 if (!musicaActivadaAlgunaVez) {
                     musica.play().catch(error => console.log("Audio bloqueado temporalmente:", error));
                     musicaActivadaAlgunaVez = true;
@@ -247,7 +284,6 @@
             }
         });
 
-        // Lógica del botón de la Bocina (Mute / Unmute)
         btnMute.addEventListener("click", () => {
             if (musica.paused) {
                 musica.play();
@@ -258,21 +294,20 @@
             }
         });
 
-        // MODIFICADO: Reinicia la pantalla pero deja la música intacta
         btnRepetir.addEventListener("click", () => {
             faseActual = 0; 
             textoPrincipal.className = "texto-cambiante";
             textoPrincipal.innerHTML = "¡FELIZ<br>CUMPLEAÑOS!";
-            imagenFinal.style.display = "none";
             
-            // Ocultamos el botón repetir pero DEJAMOS la bocina visible para que pueda mutear cuando quiera
+            // El "¡FELIZ CUMPLEAÑOS!" inicial vuelve normal sin animaciones raras, tal como pediste
+            animaciones.forEach(anim => textoPrincipal.classList.remove(anim));
+            
+            imagenFinal.style.display = "none";
             btnRepetir.style.display = "none";
             
             btnSiguiente.style.display = "block";
             btnSiguiente.innerHTML = "¡DALE DURO AQUÍ! 💥";
             moverBotonAleatoriamente();
-            
-            // NOTA: La música no se detiene ni se reinicia, sigue de largo de fondo.
         });
 
         // --- SISTEMA DE CORAZONES FLOTANTES 3D TOTALES ---
