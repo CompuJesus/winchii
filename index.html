@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Sorpresa Especial! 🎉</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Fondo psicodélico con animación de colores constantes */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #ff0055, #7f00ff, #00f0ff, #ff0055);
+            background-size: 400% 400%;
+            animation: fondoLoco 8s ease infinite;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Alinea el contenido arriba */
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Arial Black', Impact, sans-serif;
+            text-align: center;
+            position: relative;
+        }
+
+        @keyframes fondoLoco {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Contenedor principal para el texto (Ocupa la mitad superior) */
+        .contenedor-texto {
+            height: 50vh; /* Mitad superior estricta */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 2;
+            animation: pulsoLuces 0.5s linear infinite alternate;
+            box-sizing: border-box;
+        }
+
+        @keyframes pulsoLuces {
+            0% { filter: drop-shadow(0 0 15px #fff) drop-shadow(0 0 25px #ff0055); }
+            100% { filter: drop-shadow(0 0 35px #00f0ff) drop-shadow(0 0 45px #7f00ff); }
+        }
+
+        /* Estilo base para los textos con efecto vibración */
+        .texto-cambiante {
+            font-size: 3.2rem;
+            color: #fff;
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 2px;
+            text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00f0ff;
+            animation: vibrar 0.1s linear infinite;
+            line-height: 1.2;
+        }
+
+        @keyframes vibrar {
+            0% { transform: translate(2px, 1px) rotate(0deg); }
+            100% { transform: translate(-1px, -2px) rotate(1deg); }
+        }
+
+        /* Clase especial para cuando aparezca TQQJ */
+        .fuente-especial {
+            font-family: 'Caveat', cursive !important;
+            font-size: 5.5rem !important;
+            text-transform: none !important;
+            letter-spacing: 0px !important;
+            text-shadow: 3px 3px 0px #ff0055, -2px -2px 0px #7f00ff !important;
+        }
+
+        /* El botón interactivo (Se moverá solo en la mitad inferior) */
+        .boton-aleatorio {
+            position: absolute;
+            z-index: 10;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-family: 'Arial Black', sans-serif;
+            color: #fff;
+            background-color: #00ff66;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0px 0px 20px #00ff66, inset 0 0 10px #fff;
+            text-shadow: 1px 1px 2px #000;
+            transition: all 0.2s ease;
+            animation: flotarBoton 2s ease-in-out infinite alternate;
+        }
+
+        .boton-aleatorio:active {
+            transform: scale(0.9);
+            background-color: #00ffff;
+            box-shadow: 0px 0px 20px #00ffff;
+        }
+
+        @keyframes flotarBoton {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-10px); }
+        }
+
+        /* Canvas donde se dibujan los corazones */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="corazonesCanvas"></canvas>
+
+    <div class="contenedor-texto">
+        <h1 id="textoPrincipal" class="texto-cambiante">¡FELIZ<br>CUMPLE!</h1>
+    </div>
+
+    <button id="btnSiguiente" class="boton-aleatorio">¡PÍCAME AQUÍ! 👇</button>
+
+    <script>
+        // --- LÓGICA DE INTERACCIÓN Y TEXTOS ---
+        const textoPrincipal = document.getElementById("textoPrincipal");
+        const btnSiguiente = document.getElementById("btnSiguiente");
+        
+        let faseActual = 0;
+
+        // Función para mover el botón aleatoriamente SOLO en la mitad inferior de la pantalla
+        function moverBotonAleatoriamente() {
+            // El rango del alto ahora empieza a mitad de pantalla (window.innerHeight / 2)
+            const minTop = window.innerHeight / 2;
+            const maxTop = window.innerHeight - 80; // 80px de margen para que no se salga por abajo
+            
+            const maxLeft = window.innerWidth - 160; // Margen lateral para el ancho del botón
+
+            const randomTop = Math.floor(Math.random() * (maxTop - minTop)) + minTop;
+            const randomLeft = Math.max(20, Math.floor(Math.random() * maxLeft));
+
+            btnSiguiente.style.top = randomTop + "px";
+            btnSiguiente.style.left = randomLeft + "px";
+        }
+
+        // Colocar el botón abajo al cargar la página
+        moverBotonAleatoriamente();
+
+        // Al hacer clic en el botón... ¡Ahora sí funciona!
+        btnSiguiente.addEventListener("click", () => {
+            faseActual++;
+
+            if (faseActual === 1) {
+                // Cambia a "MI MUCHACHONA <3"
+                textoPrincipal.innerHTML = "MI<br>MUCHACHONA<br>&lt;3";
+                btnSiguiente.innerHTML = "¡OTRA VEZ! 💥";
+                moverBotonAleatoriamente();
+            } 
+            else if (faseActual === 2) {
+                // Cambia al mensaje final y se esconde el botón
+                textoPrincipal.innerHTML = "TQQJ";
+                textoPrincipal.classList.add("fuente-especial");
+                btnSiguiente.style.display = "none"; 
+            }
+        });
+
+
+        // --- LÓGICA DE LOS CORAZONES ROJOS ---
+        const canvas = document.getElementById("corazonesCanvas");
+        const ctx = canvas.getContext("2d");
+        let ancho = canvas.width = window.innerWidth;
+        let alto = canvas.height = window.innerHeight;
+
+        const corazones = [];
+
+        class Corazon {
+            constructor() {
+                this.x = Math.random() * ancho;
+                this.y = alto + Math.random() * 50;
+                this.tamano = Math.random() * 15 + 10;
+                this.velocidadX = Math.random() * 4 - 2;
+                this.velocidadY = Math.random() * -6 - 4;
+                this.gravedad = 0.08;
+                this.opacidad = Math.random() * 0.4 + 0.6;
+            }
+
+            actualizar() {
+                this.x += this.velocidadX;
+                this.velocidadY += this.gravedad;
+                this.y += this.velocidadY;
+
+                if (this.y > alto + 50 || this.y < -50) {
+                    this.y = alto + 20;
+                    this.velocidadY = Math.random() * -7 - 5;
+                    this.x = Math.random() * ancho;
+                    this.velocidadX = Math.random() * 4 - 2;
+                }
+            }
+
+            dibujar() {
+                ctx.save();
+                ctx.globalAlpha = this.opacidad;
+                ctx.fillStyle = "#ff0000";
+                ctx.beginPath();
+                
+                let topY = this.y - this.tamano / 2;
+                ctx.moveTo(this.x, topY + this.tamano / 4);
+                ctx.bezierCurveTo(this.x, topY, this.x - this.tamano / 2, topY, this.x - this.tamano / 2, topY + this.tamano / 4);
+                ctx.bezierCurveTo(this.x - this.tamano / 2, topY + (this.tamano * 5) / 8, this.x, topY + (this.tamano * 7) / 8, this.x, this.y + this.tamano / 2);
+                ctx.bezierCurveTo(this.x, topY + (this.tamano * 7) / 8, this.x + this.tamano / 2, topY + (this.tamano * 5) / 8, this.x + this.tamano / 2, topY + this.tamano / 4);
+                ctx.bezierCurveTo(this.x + this.tamano / 2, topY, this.x, topY, this.x, topY + this.tamano / 4);
+                
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 70; i++) {
+            corazones.push(new Corazon());
+        }
+
+        function animar() {
+            ctx.clearRect(0, 0, ancho, alto);
+            corazones.forEach(c => {
+                c.actualizar();
+                c.dibujar();
+            });
+            requestAnimationFrame(animar);
+        }
+
+        animar();
+
+        window.addEventListener("resize", () => {
+            ancho = canvas.width = window.innerWidth;
+            alto = canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
