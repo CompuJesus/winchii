@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Feliz cumpleaños Wilmar 🎉</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
@@ -10,18 +10,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Gluten:wght@700&display=swap" rel="stylesheet">
     
     <style>
-        /* MODIFICADO: Se optimizó el overflow para permitir la recarga nativa (pull-to-refresh) */
-        html, body {
-            margin: 0;
-            padding: 0;
+        /* CORREGIDO: Uso de dvh (Dynamic Viewport) para evitar que las barras de Android tapen nada */
+        html {
             background-color: #000000;
-            height: 100vh;
+            height: 100dvh;
             width: 100vw;
-            overflow-x: hidden; /* Evita que se mueva hacia los lados */
-            overflow-y: auto;   /* Permite el comportamiento vertical nativo para recargar */
+            overflow-x: hidden;
+            overflow-y: auto; /* Permite el gesto nativo de arrastrar para recargar */
+            -webkit-overflow-scrolling: touch;
         }
 
         body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            min-height: 100dvh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             justify-content: center; 
@@ -123,11 +127,11 @@
             100% { transform: translateY(-10px); }
         }
 
-        /* Botones flotantes inferiores de control */
+        /* CORREGIDO: Margen inferior subido a 80px para librar la barra de Android */
         .boton-flotante-control {
             display: none; 
             position: absolute;
-            bottom: 40px; 
+            bottom: 80px; 
             z-index: 15; 
             width: 54px;
             height: 54px;
@@ -153,9 +157,9 @@
         #btnRepetir { right: 30px; }
         #btnMute { left: 30px; } 
 
-        /* Canvas superior (Cruce 3D de corazones) */
+        /* Canvas superior anclado fijo */
         canvas {
-            position: fixed; /* MODIFICADO: Cambiado a fixed para que se ancle al fondo real */
+            position: fixed; 
             top: 0;
             left: 0;
             width: 100%;
@@ -241,12 +245,13 @@
             const anchoBoton = rectBoton.width || 180;
             const altoBoton = rectBoton.height || 54;
 
-            const minTop = window.innerHeight * 0.55; 
-            const maxTop = window.innerHeight - altoBoton - 130; 
+            // CORREGIDO: Ajuste de márgenes usando el alto dinámico disponible
+            const minTop = window.innerHeight * 0.52; 
+            const maxTop = window.innerHeight - altoBoton - 160; // Mayor espacio para no colisionar con nada abajo
             const minLeft = 20;
             const maxLeft = window.innerWidth - anchoBoton - 20;
 
-            const rangoTop = maxTop > minTop ? (maxTop - minTop) : 50;
+            const rangoTop = maxTop > minTop ? (maxTop - minTop) : 40;
             const randomTop = Math.floor(Math.random() * rangoTop) + (maxTop > minTop ? minTop : maxTop);
             
             const rangoLeft = maxLeft > minLeft ? (maxLeft - minLeft) : 20;
