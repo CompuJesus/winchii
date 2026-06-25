@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>"¡Feliz Cumpleaños Wilmar <3!" 🎉</title>
+    <title>Feliz cumpleaños Wilmar 🎉</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+    
     <link href="https://fonts.googleapis.com/css2?family=Gluten:wght@700&display=swap" rel="stylesheet">
     
     <style>
@@ -33,7 +36,7 @@
 
         /* Contenedor del contenido superior */
         .contenedor-contenido {
-            height: 55vh;
+            height: 60vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -51,7 +54,7 @@
 
         /* Estilo base para los textos */
         .texto-cambiante {
-            font-size: 3.2rem;
+            font-size: 2.8rem; /* Bajado un pelín para que "CUMPLEAÑOS" entre perfecto en cualquier móvil */
             color: #fff;
             text-transform: uppercase;
             margin: 0;
@@ -117,23 +120,23 @@
             100% { transform: translateY(-10px); }
         }
 
-        /* Botón pequeño de repetir (Abajo a la derecha) */
+        /* Botón pequeño de repetir CORREGIDO */
         .boton-repetir {
-            display: none; /* Oculto al inicio, solo aparece al final */
+            display: none; 
             position: absolute;
-            bottom: 20px;
-            right: 20px;
+            bottom: 60px;
+            right: 25px;
             z-index: 15;
-            width: 50px;
-            height: 50px;
-            font-size: 1.5rem;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.6);
+            width: 52px;
+            height: 52px;
+            font-size: 1.6rem;
+            background-color: rgba(255, 255, 255, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.7);
             border-radius: 50%;
             color: white;
             cursor: pointer;
-            backdrop-filter: blur(5px); /* Efecto vidrio esmerilado */
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -141,7 +144,7 @@
         }
 
         .boton-repetir:active {
-            transform: rotate(-180deg) scale(0.9); /* Animación de giro al pulsar */
+            transform: rotate(-180deg) scale(0.9);
             background-color: rgba(255, 255, 255, 0.5);
         }
 
@@ -177,12 +180,11 @@
         
         let faseActual = 0;
 
-        // Ocultar botón de repetir explícitamente al cargar
         btnRepetir.style.display = "none";
 
         function moverBotonAleatoriamente() {
             const minTop = window.innerHeight / 2;
-            const maxTop = window.innerHeight - 80;
+            const maxTop = window.innerHeight - 100;
             const maxLeft = window.innerWidth - 180;
 
             const randomTop = Math.floor(Math.random() * (maxTop - minTop)) + minTop;
@@ -194,7 +196,6 @@
 
         moverBotonAleatoriamente();
 
-        // Lógica del botón principal
         btnSiguiente.addEventListener("click", () => {
             faseActual++;
 
@@ -209,23 +210,16 @@
                 
                 imagenFinal.style.display = "block"; 
                 btnSiguiente.style.display = "none"; 
-                btnRepetir.style.display = "flex"; // Muestra el botón de repetir al final
+                btnRepetir.style.display = "flex"; 
             }
         });
 
-        // LÓGICA PARA REPETIR TODO DESDE EL PRINCIPIO
         btnRepetir.addEventListener("click", () => {
-            faseActual = 0; // Reinicia las fases
-            
-            // Restaura el texto original
+            faseActual = 0; 
             textoPrincipal.className = "texto-cambiante";
-            textoPrincipal.innerHTML = "¡FELIZ<br>CUMPLEAÑOS!";
-            
-            // Oculta la foto y el botón de reiniciar
+            textoPrincipal.innerHTML = "¡FELIZ<br>CUMPLEAÑOS!"; // Modificado aquí también al reiniciar
             imagenFinal.style.display = "none";
             btnRepetir.style.display = "none";
-            
-            // Regresa el botón principal verde a la acción
             btnSiguiente.style.display = "block";
             btnSiguiente.innerHTML = "¡DALE DURO AQUÍ! 💥";
             moverBotonAleatoriamente();
