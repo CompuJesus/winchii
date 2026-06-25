@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Gluten:wght@700&display=swap" rel="stylesheet">
     
     <style>
-        /* MODIFICADO: Fondo negro puro absoluto */
+        /* Fondo negro puro absoluto */
         body {
             margin: 0;
             padding: 0;
@@ -156,7 +156,7 @@
 
         /* Posiciones separadas para los botones de abajo */
         #btnRepetir { right: 30px; }
-        #btnMute { left: 30px; } /* Botón de la bocina a la izquierda */
+        #btnMute { left: 30px; } 
 
         /* Canvas superior (Cruce 3D de corazones) */
         canvas {
@@ -196,10 +196,11 @@
         
         // --- SISTEMA DE AUDIO ---
         const musica = new Audio();
-        musica.src = "cancion.mp3"; // Recuerda tener tu archivo "cancion.mp3" en la carpeta
+        musica.src = "cancion.mp3"; 
         musica.loop = true;
 
         let faseActual = 0;
+        let musicaActivadaAlgunaVez = false;
         
         // Ocultar controles al inicio
         btnRepetir.style.display = "none";
@@ -234,13 +235,15 @@
                 imagenFinal.style.display = "block"; 
                 btnSiguiente.style.display = "none"; 
                 
-                // Mostrar botones de control al final
                 btnRepetir.style.display = "flex"; 
                 btnMute.style.display = "flex"; 
-                btnMute.innerHTML = "🔊"; // Inicia sonando
                 
-                // Reproducir canción
-                musica.play().catch(error => console.log("Audio bloqueado temporalmente:", error));
+                // Si la música nunca ha sonado o no está pausada manualmente, actívala
+                if (!musicaActivadaAlgunaVez) {
+                    musica.play().catch(error => console.log("Audio bloqueado temporalmente:", error));
+                    musicaActivadaAlgunaVez = true;
+                    btnMute.innerHTML = "🔊";
+                }
             }
         });
 
@@ -255,23 +258,21 @@
             }
         });
 
+        // MODIFICADO: Reinicia la pantalla pero deja la música intacta
         btnRepetir.addEventListener("click", () => {
             faseActual = 0; 
             textoPrincipal.className = "texto-cambiante";
             textoPrincipal.innerHTML = "¡FELIZ<br>CUMPLEAÑOS!";
             imagenFinal.style.display = "none";
             
-            // Ocultar botones flotantes
+            // Ocultamos el botón repetir pero DEJAMOS la bocina visible para que pueda mutear cuando quiera
             btnRepetir.style.display = "none";
-            btnMute.style.display = "none";
             
             btnSiguiente.style.display = "block";
             btnSiguiente.innerHTML = "¡DALE DURO AQUÍ! 💥";
             moverBotonAleatoriamente();
             
-            // Apagar música por completo
-            musica.pause();
-            musica.currentTime = 0;
+            // NOTA: La música no se detiene ni se reinicia, sigue de largo de fondo.
         });
 
         // --- SISTEMA DE CORAZONES FLOTANTES 3D TOTALES ---
@@ -325,7 +326,7 @@
                 }
 
                 ctx.globalAlpha = Math.max(0, alfaFinal);
-                ctx.fillStyle = "#ff0033"; // Un rojo vivo precioso sobre el fondo negro
+                ctx.fillStyle = "#ff0033"; 
                 
                 ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
                 ctx.shadowBlur = escala3D * 2;
