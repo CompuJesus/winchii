@@ -10,12 +10,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Gluten:wght@700&display=swap" rel="stylesheet">
     
     <style>
-        /* FONDO NEGRO ABSOLUTO: Elimina parpadeos y resalta el neón */
+        /* FONDO NEGRO ABSOLUTO: Máximo contraste y sin parpadeos */
         html, body {
             margin: 0;
             padding: 0;
             background-color: #000000;
-            height: 100dvh; 
+            height: 100vh;
+            height: 100svh; /* Altura segura que descuenta la barra del iPhone y Android */
             width: 100vw;
             overflow: hidden; 
             user-select: none;
@@ -45,6 +46,7 @@
             padding: 20px;
             z-index: 2;
             box-sizing: border-box;
+            margin-bottom: 60px; /* Deja espacio libre para que los botones nunca toquen el contenido */
         }
 
         /* Luces de neón constantes de fondo para los textos */
@@ -85,19 +87,19 @@
         /* Marco redondo gigante */
         .foto-sorpresa {
             display: none;
-            width: 70vw;         
-            height: 70vw;        
-            max-width: 320px;    
-            max-height: 320px;
+            width: 68vw;         
+            height: 68vw;        
+            max-width: 300px;    
+            max-height: 300px;
             object-fit: cover;   
             border-radius: 50%;  
             border: 6px solid #ffffff;
             box-shadow: 0 0 35px #00ff66, 0 0 15px #ffffff;
         }
 
-        /* Botón interactivo principal */
+        /* Botón interactivo principal (Salta por la pantalla de forma segura) */
         .boton-aleatorio {
-            position: fixed;
+            position: absolute;
             z-index: 3; 
             padding: 15px 30px;
             font-size: 1.1rem;
@@ -124,11 +126,11 @@
             100% { transform: translateY(-10px); }
         }
 
-        /* CORREGIDO: Subidos a bottom: 90px para librar definitivamente la barra de Android */
+        /* 📱 CONTROLES BLINDADOS: Posición absoluta respecto al área segura visible */
         .boton-flotante-control {
             display: none; 
-            position: fixed; 
-            bottom: 90px; 
+            position: absolute; 
+            bottom: 30px; /* Distancia perfecta sobre la barra de gestos del iPhone */
             z-index: 15; 
             width: 56px;
             height: 56px;
@@ -139,6 +141,7 @@
             color: white;
             cursor: pointer;
             backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px); /* Soporte obligatorio para el Safari de iPhone */
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
             display: flex;
             justify-content: center;
@@ -242,9 +245,9 @@
             const anchoBoton = rectBoton.width || 180;
             const altoBoton = rectBoton.height || 54;
 
-            // Límites limpios y seguros para la pantalla
+            // Límites súper seguros adaptados al contenedor de altura fija
             const minTop = window.innerHeight * 0.15; 
-            const maxTop = window.innerHeight - altoBoton - 170; // Espacio de sobra abajo
+            const maxTop = window.innerHeight - altoBoton - 110; 
             const minLeft = 20;
             const maxLeft = window.innerWidth - anchoBoton - 20;
 
@@ -314,28 +317,6 @@
             btnSiguiente.innerHTML = "¡DALE DURO AQUÍ! 💥";
             moverBotonAleatoriamente();
         });
-
-        // --- CORREGIDO: CALIBRACIÓN DEL PULL-TO-REFRESH ---
-        let inicioY = 0;
-        let esZonaValida = false;
-
-        window.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 1) {
-                inicioY = e.touches[0].clientY;
-                // Solo permite el gesto si inicia en la mitad superior de la pantalla
-                esZonaValida = inicioY < (window.innerHeight / 2);
-            }
-        }, { passive: true });
-
-        window.addEventListener('touchmove', (e) => {
-            if (e.touches.length === 1 && esZonaValida) {
-                const cambioY = e.touches[0].clientY - inicioY;
-                // Arrastre firme hacia abajo de más de 150px
-                if (cambioY > 150) {
-                    window.location.reload();
-                }
-            }
-        }, { passive: true });
 
         // --- SISTEMA DE CORAZONES FLOTANTES 3D ---
         const canvas = document.getElementById("corazonesCanvas");
