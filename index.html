@@ -20,8 +20,8 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Centrado vertical absoluto */
-            align-items: center;     /* Centrado horizontal absoluto */
+            justify-content: center; 
+            align-items: center;     
             overflow: hidden;
             font-family: 'Arial Black', Impact, sans-serif;
             text-align: center;
@@ -34,7 +34,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* CONTENEDOR CENTRAL: Todo agrupado firmemente en el medio de la pantalla */
+        /* CONTENEDOR CENTRAL */
         .contenedor-contenido {
             width: 100%;
             max-width: 500px;
@@ -42,13 +42,12 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 25px; /* Espacio controlado entre el texto y la foto */
+            gap: 25px; 
             padding: 20px;
             z-index: 2;
             box-sizing: border-box;
         }
 
-        /* Efecto de luces parpadeantes exclusivo para el texto */
         .luces-texto {
             animation: pulsoLuces 0.5s linear infinite alternate;
         }
@@ -58,7 +57,6 @@
             100% { filter: drop-shadow(0 0 35px #00f0ff) drop-shadow(0 0 45px #7f00ff); }
         }
 
-        /* Estilo base para los textos iniciales */
         .texto-cambiante {
             font-size: 2.8rem;
             color: #fff;
@@ -75,7 +73,6 @@
             100% { transform: translate(-1px, -2px) rotate(1deg); }
         }
 
-        /* Clase limpia para TQQJ arriba */
         .fuente-burbuja {
             font-family: 'Gluten', cursive !important;
             font-size: 4.2rem !important;
@@ -86,12 +83,12 @@
             margin: 0;
         }
 
-        /* Marco redondo gigante y centrado */
+        /* Marco redondo gigante */
         .foto-sorpresa {
             display: none;
             width: 70vw;         
             height: 70vw;        
-            max-width: 320px;    /* Un tamaño más controlado para PC y móviles */
+            max-width: 320px;    
             max-height: 320px;
             object-fit: cover;   
             border-radius: 50%;  
@@ -105,7 +102,7 @@
             100% { transform: scale(1.02); filter: drop-shadow(0 0 25px #00ffff); }
         }
 
-        /* El botón interactivo principal abajo */
+        /* Botón interactivo */
         .boton-aleatorio {
             position: absolute;
             z-index: 3; 
@@ -134,7 +131,6 @@
             100% { transform: translateY(-10px); }
         }
 
-        /* Botón de repetir flotante */
         .boton-repetir {
             display: none; 
             position: absolute;
@@ -157,12 +153,7 @@
             transition: all 0.2s ease;
         }
 
-        .boton-repetir:active {
-            transform: rotate(-180deg) scale(0.9);
-            background-color: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Canvas en capa superior para el cruce tridimensional */
+        /* Canvas arriba para la tridimensionalidad global */
         canvas {
             position: absolute;
             top: 0;
@@ -195,8 +186,12 @@
         const imagenFinal = document.getElementById("imagenFinal");
         const btnRepetir = document.getElementById("btnRepetir");
         
-        let faseActual = 0;
+        // --- SISTEMA DE AUDIO ---
+        const musica = new Audio();
+        musica.src = "cancion.mp3"; // Reemplaza aquí con el nombre de tu archivo o URL musical
+        musica.loop = true;
 
+        let faseActual = 0;
         btnRepetir.style.display = "none";
 
         function moverBotonAleatoriamente() {
@@ -228,6 +223,9 @@
                 imagenFinal.style.display = "block"; 
                 btnSiguiente.style.display = "none"; 
                 btnRepetir.style.display = "flex"; 
+                
+                // ¡REPRODUCIR MÚSICA EN EL MOMENTO SORPRESA!
+                musica.play().catch(error => console.log("El navegador bloqueó el audio inicial:", error));
             }
         });
 
@@ -240,9 +238,13 @@
             btnSiguiente.style.display = "block";
             btnSiguiente.innerHTML = "¡DALE DURO AQUÍ! 💥";
             moverBotonAleatoriamente();
+            
+            // Pausar y reiniciar música al reiniciar
+            musica.pause();
+            musica.currentTime = 0;
         });
 
-        // --- SISTEMA DE CORAZONES REDISTRIBUIDO ---
+        // --- SISTEMA DE CORAZONES FLOTANTES TOTALES (SIN GRAVEDAD) ---
         const canvas = document.getElementById("corazonesCanvas");
         const ctx = canvas.getContext("2d");
         let ancho = canvas.width = window.innerWidth;
@@ -251,40 +253,40 @@
         const corazones = [];
 
         class Corazon {
-            constructor(inicializarEnPantalla = false) {
+            constructor(inicializarEsparcidos = false) {
                 this.x = Math.random() * ancho;
                 
-                // Si es la carga inicial, los esparce por toda la pantalla (eje Y)
-                if (inicializarEnPantalla) {
+                // Si arranca, se distribuyen equitativamente en toda la pantalla
+                if (inicializarEsparcidos) {
                     this.y = Math.random() * alto;
                 } else {
-                    this.y = alto + Math.random() * 40;
+                    // Si reaparecen, viajan desde abajo o los lados
+                    this.y = alto + Math.random() * 60;
                 }
                 
-                // Lógica Z (1 es fondo, 0 adelante)
                 this.z = Math.random() * 0.7 + 0.3; 
-                this.velocidadZ = Math.random() * 0.003 + 0.002; 
+                this.velocidadZ = Math.random() * 0.003 + 0.002; // Velocidad de acercamiento 3D
                 
-                this.tamanoBase = Math.random() * 8 + 6; // Un poco más pequeños de base
-                this.velocidadX = Math.random() * 2 - 1;
-                this.velocidadY = Math.random() * -3 - 1.5; 
-                this.gravedad = 0.03;
-                this.opacidad = Math.random() * 0.3 + 0.6;
+                this.tamanoBase = Math.random() * 7 + 5; 
+                
+                // Velocidades constantes para expandirse por todos lados
+                this.velocidadX = Math.random() * 4 - 2;  // Se mueven a la izquierda y derecha de forma fluida
+                this.velocidadY = Math.random() * -3 - 2;  // Vuelan consistentemente hacia arriba
+                this.opacidad = Math.random() * 0.4 + 0.6;
             }
 
             actualizar() {
                 this.z -= this.velocidadZ;
                 this.x += this.velocidadX;
-                this.velocidadY += this.gravedad;
-                this.y += this.velocidadY;
+                this.y += this.velocidadY; // Sin gravedad, no frena; cruza toda la pantalla libremente
 
-                // Al salir o acercarse demasiado, reaparecen abajo limpiamente
-                if (this.z <= 0.08 || this.y < -80 || this.x < -80 || this.x > ancho + 80) {
+                // Reinicio limpio cuando escapan de los límites visuales
+                if (this.z <= 0.08 || this.y < -100 || this.x < -100 || this.x > ancho + 100) {
                     this.x = Math.random() * ancho;
                     this.y = alto + Math.random() * 40;
                     this.z = Math.random() * 0.7 + 0.3;
-                    this.velocidadY = Math.random() * -3 - 1.5;
-                    this.velocidadX = Math.random() * 2 - 1;
+                    this.velocidadX = Math.random() * 4 - 2;
+                    this.velocidadY = Math.random() * -3 - 2;
                 }
             }
 
@@ -292,8 +294,7 @@
                 ctx.save();
                 
                 let escala3D = 1 / this.z;
-                // Controlamos que el tamaño final no se desorbite (máximo escala 5x)
-                let tamanoFinal = this.tamanoBase * Math.min(escala3D, 5);
+                let tamanoFinal = this.tamanoBase * Math.min(escala3D, 4.5); // Límite de tamaño cómodo
                 
                 let alfaFinal = this.opacidad;
                 if (this.z < 0.2) {
@@ -303,7 +304,7 @@
                 ctx.globalAlpha = Math.max(0, alfaFinal);
                 ctx.fillStyle = "#ff0000";
                 
-                ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
+                ctx.shadowColor = "rgba(0, 0, 0, 0.15)";
                 ctx.shadowBlur = escala3D * 1.5;
                 ctx.shadowOffsetY = escala3D;
 
@@ -319,9 +320,9 @@
             }
         }
 
-        // Reducido a 40 corazones bien distribuidos desde el inicio
-        for (let i = 0; i < 40; i++) {
-            corazones.push(new Corazon(true)); // true fuerza la distribución inicial por toda la pantalla
+        // 45 corazones dinámicos cubriendo uniformemente la interfaz
+        for (let i = 0; i < 45; i++) {
+            corazones.push(new Corazon(true)); 
         }
 
         function animar() {
