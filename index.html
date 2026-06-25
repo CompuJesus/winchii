@@ -2,38 +2,409 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Feliz cumpleaños Wilmar 🎉</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
     
-    <link href="https://fonts.googleapis.com/css2?family=Gluten:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gluten:wght=700&display=swap" rel="stylesheet">
     
     <style>
-        /* FONDO NEGRO ABSOLUTO: Máximo contraste y sin parpadeos */
+        /* FONDO NEGRO ABSOLUTO Y REESTABLECIMIENTO */
         html, body {
             margin: 0;
             padding: 0;
             background-color: #000000;
-            height: 100vh;
-            height: 100svh; /* Altura segura que descuenta la barra del iPhone y Android */
             width: 100vw;
+            height: 100%;
             overflow: hidden; 
             user-select: none;
             -webkit-user-select: none;
         }
 
-        body {
+        /* CONTENEDOR SEGURO: Obliga a respetar las barras de iOS y Android */
+        .layout-principal {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            height: 100dvh; /* Altura dinámica que se adapta al encogerse/expandirse las barras */
             display: flex;
             flex-direction: column;
-            justify-content: center; 
-            align-items: center;     
-            font-family: 'Arial Black', Impact, sans-serif;
-            text-align: center;
-            position: relative;
-            perspective: 1000px;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
         }
 
+        /* CONTENEDOR CENTRAL */
+        .contenedor-contenido {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 25px; 
+            padding: 20px;
+            z-index: 2;
+            box-sizing: border-box;
+            margin-bottom: 80px; /* Despeja el área inferior */
+        }
+
+        /* Luces de neón constantes de fondo para los textos */
+        .luces-texto {
+            animation: pulsoNeon 0.6s linear infinite alternate;
+            display: inline-block;
+        }
+
+        @keyframes pulsoNeon {
+            0% { filter: drop-shadow(0 0 10px #ff0055) drop-shadow(0 0 20px #ff0055); }
+            100% { filter: drop-shadow(0 0 20px #00f0ff) drop-shadow(0 0 35px #00f0ff); }
+        }
+
+        /* Texto base fiestero */
+        .texto-cambiante {
+            font-size: 2.8rem;
+            color: #ffffff;
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 2px;
+            text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00f0ff;
+            line-height: 1.2;
+            display: inline-block;
+        }
+
+        /* TQQJ en estilo neón burbuja brillante */
+        .fuente-burbuja {
+            font-family: 'Gluten', cursive !important;
+            font-size: 4.2rem !important;
+            text-transform: none !important;
+            letter-spacing: 0px !important;
+            color: #ffffff !important;
+            text-shadow: 4px 4px 0px #00f0ff, -3px -3px 0px #7f00ff, 0 0 20px #00f0ff !important;
+            margin: 0;
+            display: inline-block;
+        }
+
+        /* Marco redondo gigante */
+        .foto-sorpresa {
+            display: none;
+            width: 68vw;         
+            height: 68vw;        
+            max-width: 300px;    
+            max-height: 300px;
+            object-fit: cover;   
+            border-radius: 50%;  
+            border: 6px solid #ffffff;
+            box-shadow: 0 0 35px #00ff66, 0 0 15px #ffffff;
+        }
+
+        /* Botón interactivo principal */
+        .boton-aleatorio {
+            position: absolute;
+            z-index: 3; 
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-family: 'Arial Black', sans-serif;
+            color: #fff;
+            background-color: #00ff66;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0px 0px 25px #00ff66, inset 0 0 10px #fff;
+            text-shadow: 1px 1px 2px #000;
+            transition: transform 0.1s ease, background-color 0.2s ease;
+            animation: flotarBoton 2s ease-in-out infinite alternate;
+        }
+
+        .boton-aleatorio:active {
+            transform: scale(0.9);
+            background-color: #00ffff;
+            box-shadow: 0px 0px 20px #00ffff;
+        }
+
+        @keyframes flotarBoton {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-10px); } /* Esto es solo el sutil meneo visual del botón flotante */
+        }
+
+        /* 📱 CONTROLES INFERIORES PROTEGIDOS */
+        .boton-flotante-control {
+            display: none; 
+            position: absolute; 
+            bottom: calc(40px + env(safe-area-inset-bottom)); /* Usa el estándar de Apple para esquivar la barra del iPhone */
+            z-index: 15; 
+            width: 56px;
+            height: 56px;
+            font-size: 1.6rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px); /* Soporte crítico para Safari en iOS */
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .boton-flotante-control:active {
+            transform: scale(0.85);
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        #btnRepetir { right: 35px; }
+        #btnMute { left: 35px; } 
+
+        /* Canvas de fondo */
+        canvas {
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; 
+            pointer-events: none; 
+        }
+
+        /* ANIMACIONES */
+        .animacion-pop { animation: animPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
+        @keyframes animPop {
+            0% { transform: scale(0); opacity: 0; }
+            70% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .animacion-flip { animation: animFlip 0.6s cubic-bezier(0.4, 0, 0.2, 1) both; }
+        @keyframes animFlip {
+            0% { transform: rotateX(-90deg); opacity: 0; transform-origin: top; }
+            100% { transform: rotateX(0deg); opacity: 1; }
+        }
+
+        .animacion-slide { animation: animSlide 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+        @keyframes animSlide {
+            0% { transform: translateX(-100vw); opacity: 0; }
+            80% { transform: translateX(10px); }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        .animacion-zoom { animation: animZoom 0.6s ease-out both; }
+        @keyframes animZoom {
+            0% { transform: scale(3); filter: blur(10px); opacity: 0; }
+            100% { transform: scale(1); filter: blur(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="corazonesCanvas"></canvas>
+
+    <div class="layout-principal">
+
+        <div class="contenedor-contenido">
+            <div class="luces-texto">
+                <h1 id="textoPrincipal" class="texto-cambiante">¡FELIZ<br>CUMPLEAÑOS!</h1>
+            </div>
+            <img id="imagenFinal" src="foto.jpg" alt="Foto Sorpresa" class="foto-sorpresa">
+        </div>
+
+        <button id="btnSiguiente" class="boton-aleatorio">¡DALE DURO AQUÍ! 💥</button>
+
+        <button id="btnMute" class="boton-flotante-control" title="Silenciar/Reproducir">🔊</button>
+
+        <button id="btnRepetir" class="boton-flotante-control" title="Repetir">🔄</button>
+
+    </div>
+
+    <script>
+        const textoPrincipal = document.getElementById("textoPrincipal");
+        const btnSiguiente = document.getElementById("btnSiguiente");
+        const imagenFinal = document.getElementById("imagenFinal");
+        const btnRepetir = document.getElementById("btnRepetir");
+        const btnMute = document.getElementById("btnMute");
+        
+        const musica = new Audio();
+        musica.src = "cancion.mp3"; 
+        musica.loop = true;
+
+        let faseActual = 0;
+        let musicaActivadaAlgunaVez = false;
+        
+        btnRepetir.style.display = "none";
+        btnMute.style.display = "none";
+
+        const animaciones = ['animacion-pop', 'animacion-flip', 'animacion-slide', 'animacion-zoom'];
+
+        function aplicarAnimacionAleatoria(elemento) {
+            animaciones.forEach(anim => elemento.classList.remove(anim));
+            void elemento.offsetWidth; 
+            const animacionElegida = animaciones[Math.floor(Math.random() * animaciones.length)];
+            elemento.classList.add(animacionElegida);
+        }
+
+        function moverBotonAleatoriamente() {
+            const rectBoton = btnSiguiente.getBoundingClientRect();
+            const anchoBoton = rectBoton.width || 180;
+            const altoBoton = rectBoton.height || 54;
+
+            const minTop = window.innerHeight * 0.15; 
+            const maxTop = window.innerHeight - altoBoton - 130; 
+            const minLeft = 20;
+            const maxLeft = window.innerWidth - anchoBoton - 20;
+
+            const rangoTop = maxTop > minTop ? (maxTop - minTop) : 40;
+            const randomTop = Math.floor(Math.random() * rangoTop) + minTop;
+            
+            const rangoLeft = maxLeft > minLeft ? (maxLeft - minLeft) : 20;
+            const randomLeft = Math.floor(Math.random() * rangoLeft) + minLeft;
+
+            btnSiguiente.style.top = randomTop + "px";
+            btnSiguiente.style.left = randomLeft + "px";
+        }
+
+        window.addEventListener("load", moverBotonAleatoriamente);
+        window.addEventListener("resize", moverBotonAleatoriamente);
+
+        btnSiguiente.addEventListener("click", () => {
+            faseActual++;
+
+            if (faseActual === 1) {
+                textoPrincipal.innerHTML = "MI<br>MUCHACHONA<br>&lt;3";
+                aplicarAnimacionAleatoria(textoPrincipal);
+                btnSiguiente.innerHTML = "¡OTRA VEZ! 💥";
+                moverBotonAleatoriamente();
+            } 
+            else if (faseActual === 2) {
+                textoPrincipal.className = "fuente-burbuja"; 
+                textoPrincipal.innerHTML = "TQQJ";
+                
+                aplicarAnimacionAleatoria(textoPrincipal);
+                imagenFinal.style.display = "block"; 
+                aplicarAnimacionAleatoria(imagenFinal);
+                
+                btnSiguiente.style.display = "none"; 
+                btnRepetir.style.display = "flex"; 
+                btnMute.style.display = "flex"; 
+                
+                if (!musicaActivadaAlgunaVez) {
+                    musica.play().catch(error => console.log("Audio bloqueado:", error));
+                    musicaActivadaAlgunaVez = true;
+                    btnMute.innerHTML = "🔊";
+                }
+            }
+        });
+
+        btnMute.addEventListener("click", () => {
+            if (musica.paused) {
+                musica.play();
+                btnMute.innerHTML = "🔊";
+            } else {
+                musica.pause();
+                btnMute.innerHTML = "🔇";
+            }
+        });
+
+        btnRepetir.addEventListener("click", () => {
+            faseActual = 0; 
+            textoPrincipal.className = "texto-cambiante";
+            textoPrincipal.innerHTML = "¡FELIZ<br>CUMPLEAÑOS!";
+            
+            animaciones.forEach(anim => textoPrincipal.classList.remove(anim));
+            
+            imagenFinal.style.display = "none";
+            btnRepetir.style.display = "none";
+            
+            btnSiguiente.style.display = "block";
+            btnSiguiente.innerHTML = "¡DALE DURO AQUÍ! 💥";
+            moverBotonAleatoriamente();
+        });
+
+        // --- SISTEMA DE CORAZONES ---
+        const canvas = document.getElementById("corazonesCanvas");
+        const ctx = canvas.getContext("2d");
+        let ancho = canvas.width = window.innerWidth;
+        let alto = canvas.height = window.innerHeight;
+
+        const corazones = [];
+
+        class Corazon {
+            constructor(inicializarEsparcidos = false) {
+                this.x = Math.random() * ancho;
+                if (inicializarEsparcidos) {
+                    this.y = Math.random() * alto;
+                } else {
+                    this.y = alto + Math.random() * 60;
+                }
+                
+                this.z = Math.random() * 0.7 + 0.3; 
+                this.velocidadZ = Math.random() * 0.003 + 0.002; 
+                this.tamanoBase = Math.random() * 7 + 5; 
+                this.velocidadX = Math.random() * 4 - 2;  
+                this.velocidadY = Math.random() * -3 - 2;  
+                this.opacidad = Math.random() * 0.4 + 0.6;
+            }
+
+            actualizar() {
+                this.z -= this.velocidadZ;
+                this.x += this.velocidadX;
+                this.y += this.velocidadY; 
+
+                if (this.z <= 0.08 || this.y < -100 || this.x < -100 || this.x > ancho + 100) {
+                    this.x = Math.random() * ancho;
+                    this.y = alto + Math.random() * 40;
+                    this.z = Math.random() * 0.7 + 0.3;
+                    this.velocidadX = Math.random() * 4 - 2;
+                    this.velocidadY = Math.random() * -3 - 2;
+                }
+            }
+
+            dibujar() {
+                ctx.save();
+                let escala3D = 1 / this.z;
+                let tamanoFinal = this.tamanoBase * Math.min(escala3D, 4.5); 
+                let alfaFinal = this.opacidad;
+                if (this.z < 0.2) alfaFinal *= (this.z / 0.2); 
+
+                ctx.globalAlpha = Math.max(0, alfaFinal);
+                ctx.fillStyle = "#ff0033"; 
+                
+                ctx.beginPath();
+                let topY = this.y - tamanoFinal / 2;
+                ctx.moveTo(this.x, topY + tamanoFinal / 4);
+                ctx.bezierCurveTo(this.x, topY, this.x - tamanoFinal / 2, topY, this.x - tamanoFinal / 2, topY + tamanoFinal / 4);
+                ctx.bezierCurveTo(this.x - tamanoFinal / 2, topY + (tamanoFinal * 5) / 8, this.x, topY + (tamanoFinal * 7) / 8, this.x, this.y + tamanoFinal / 2);
+                ctx.bezierCurveTo(this.x, topY + (tamanoFinal * 7) / 8, this.x + tamanoFinal / 2, topY + (tamanoFinal * 5) / 8, this.x + tamanoFinal / 2, topY + tamanoFinal / 4);
+                ctx.bezierCurveTo(this.x + tamanoFinal / 2, topY, this.x, topY, this.x, topY + tamanoFinal / 4);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 45; i++) {
+            corazones.push(new Corazon(true)); 
+        }
+
+        function animar() {
+            ctx.clearRect(0, 0, ancho, alto);
+            corazones.sort((a, b) => b.z - a.z);
+            corazones.forEach(c => {
+                c.actualizar();
+                c.dibujar();
+            });
+            requestAnimationFrame(animar);
+        }
+
+        animar();
+
+        window.addEventListener("resize", () => {
+            ancho = canvas.width = window.innerWidth;
+            alto = canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
         /* CONTENEDOR CENTRAL */
         .contenedor-contenido {
             width: 100%;
