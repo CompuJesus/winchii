@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡Feliz Cumpleaños Wilmar! 🎉</title>
+    <title>"¡Feliz Cumpleaños Wilmar <3!" 🎉</title>
     <link href="https://fonts.googleapis.com/css2?family=Gluten:wght@700&display=swap" rel="stylesheet">
     
     <style>
@@ -33,7 +33,7 @@
 
         /* Contenedor del contenido superior */
         .contenedor-contenido {
-            height: 55vh; /* Un poco más alto para darle espacio a la foto */
+            height: 55vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -66,7 +66,7 @@
             100% { transform: translate(-1px, -2px) rotate(1deg); }
         }
 
-        /* Nueva clase limpia para TQQJ (Sin heredar Arial Black, evita el parpadeo) */
+        /* Clase para TQQJ */
         .fuente-burbuja {
             font-family: 'Gluten', cursive !important;
             font-size: 4.5rem !important;
@@ -78,17 +78,17 @@
 
         /* Estilo para la imagen sorpresa del final */
         .foto-sorpresa {
-            display: none; /* Oculta por defecto */
+            display: none;
             width: 140px;
             height: 140px;
             object-fit: cover;
-            border-radius: 50%; /* Foto redonda bonita */
+            border-radius: 50%;
             border: 5px solid #fff;
             box-shadow: 0 0 20px #00ff66;
             margin-top: 15px;
         }
 
-        /* El botón interactivo abajo */
+        /* El botón interactivo principal abajo */
         .boton-aleatorio {
             position: absolute;
             z-index: 10;
@@ -117,6 +117,34 @@
             100% { transform: translateY(-10px); }
         }
 
+        /* Botón pequeño de repetir (Abajo a la derecha) */
+        .boton-repetir {
+            display: none; /* Oculto al inicio, solo aparece al final */
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 15;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            backdrop-filter: blur(5px); /* Efecto vidrio esmerilado */
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .boton-repetir:active {
+            transform: rotate(-180deg) scale(0.9); /* Animación de giro al pulsar */
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
         canvas {
             position: absolute;
             top: 0;
@@ -133,19 +161,24 @@
     <canvas id="corazonesCanvas"></canvas>
 
     <div class="contenedor-contenido">
-        <h1 id="textoPrincipal" class="texto-cambiante">¡FELIZ<br>CUMPLE!</h1>
-        
+        <h1 id="textoPrincipal" class="texto-cambiante">¡FELIZ<br>CUMPLEAÑOS!</h1>
         <img id="imagenFinal" src="foto.jpg" alt="Foto Sorpresa" class="foto-sorpresa">
     </div>
 
     <button id="btnSiguiente" class="boton-aleatorio">¡DALE DURO AQUÍ! 💥</button>
 
+    <button id="btnRepetir" class="boton-repetir" title="Repetir">🔄</button>
+
     <script>
         const textoPrincipal = document.getElementById("textoPrincipal");
         const btnSiguiente = document.getElementById("btnSiguiente");
         const imagenFinal = document.getElementById("imagenFinal");
+        const btnRepetir = document.getElementById("btnRepetir");
         
         let faseActual = 0;
+
+        // Ocultar botón de repetir explícitamente al cargar
+        btnRepetir.style.display = "none";
 
         function moverBotonAleatoriamente() {
             const minTop = window.innerHeight / 2;
@@ -161,23 +194,41 @@
 
         moverBotonAleatoriamente();
 
+        // Lógica del botón principal
         btnSiguiente.addEventListener("click", () => {
             faseActual++;
 
             if (faseActual === 1) {
-                // Fase 1: Cambia a "MI MUCHACHONA <3"
                 textoPrincipal.innerHTML = "MI<br>MUCHACHONA<br>&lt;3";
                 btnSiguiente.innerHTML = "¡OTRA VEZ! 💥";
                 moverBotonAleatoriamente();
             } 
             else if (faseActual === 2) {
-                // Fase 2: Cambia a "TQQJ", aplica la nueva fuente al tiro y muestra la foto
-                textoPrincipal.className = "fuente-burbuja"; // Cambia la clase por completo para evitar parpadeos
+                textoPrincipal.className = "fuente-burbuja"; 
                 textoPrincipal.innerHTML = "TQQJ";
                 
-                imagenFinal.style.display = "block"; // Revela la imagen
-                btnSiguiente.style.display = "none"; // Desaparece el botón
+                imagenFinal.style.display = "block"; 
+                btnSiguiente.style.display = "none"; 
+                btnRepetir.style.display = "flex"; // Muestra el botón de repetir al final
             }
+        });
+
+        // LÓGICA PARA REPETIR TODO DESDE EL PRINCIPIO
+        btnRepetir.addEventListener("click", () => {
+            faseActual = 0; // Reinicia las fases
+            
+            // Restaura el texto original
+            textoPrincipal.className = "texto-cambiante";
+            textoPrincipal.innerHTML = "¡FELIZ<br>CUMPLEAÑOS!";
+            
+            // Oculta la foto y el botón de reiniciar
+            imagenFinal.style.display = "none";
+            btnRepetir.style.display = "none";
+            
+            // Regresa el botón principal verde a la acción
+            btnSiguiente.style.display = "block";
+            btnSiguiente.innerHTML = "¡DALE DURO AQUÍ! 💥";
+            moverBotonAleatoriamente();
         });
 
         // --- SISTEMA DE CORAZONES ---
