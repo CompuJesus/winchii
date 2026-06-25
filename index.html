@@ -10,14 +10,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Gluten:wght@700&display=swap" rel="stylesheet">
     
     <style>
-        /* Fondo negro absoluto e inmóvil */
+        /* FONDO NEGRO ABSOLUTO: Elimina parpadeos y resalta el neón */
         html, body {
             margin: 0;
             padding: 0;
             background-color: #000000;
-            height: 100dvh; /* Altura dinámica real del navegador móvil */
+            height: 100dvh; 
             width: 100vw;
-            overflow: hidden; /* Evita rebotes raros; la recarga ahora la controla el script */
+            overflow: hidden; 
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         body {
@@ -93,7 +95,7 @@
             box-shadow: 0 0 35px #00ff66, 0 0 15px #ffffff;
         }
 
-        /* Botón interactivo principal (Cambiado a FIXED para estabilidad absoluta) */
+        /* Botón interactivo principal */
         .boton-aleatorio {
             position: fixed;
             z-index: 3; 
@@ -122,14 +124,14 @@
             100% { transform: translateY(-10px); }
         }
 
-        /* CORREGIDO: Cambiado a fixed y posicionado estratégicamente sobre la barra de Android */
+        /* CORREGIDO: Subidos a bottom: 90px para librar definitivamente la barra de Android */
         .boton-flotante-control {
             display: none; 
             position: fixed; 
-            bottom: 45px; 
+            bottom: 90px; 
             z-index: 15; 
-            width: 54px;
-            height: 54px;
+            width: 56px;
+            height: 56px;
             font-size: 1.6rem;
             background-color: rgba(255, 255, 255, 0.2);
             border: 2px solid rgba(255, 255, 255, 0.6);
@@ -149,8 +151,8 @@
             background-color: rgba(255, 255, 255, 0.4);
         }
 
-        #btnRepetir { right: 30px; }
-        #btnMute { left: 30px; } 
+        #btnRepetir { right: 35px; }
+        #btnMute { left: 35px; } 
 
         /* Canvas superior anclado */
         canvas {
@@ -240,9 +242,9 @@
             const anchoBoton = rectBoton.width || 180;
             const altoBoton = rectBoton.height || 54;
 
-            // Límites adaptados para posición Fixed y libres de barras inferiores
+            // Límites limpios y seguros para la pantalla
             const minTop = window.innerHeight * 0.15; 
-            const maxTop = window.innerHeight - altoBoton - 130; 
+            const maxTop = window.innerHeight - altoBoton - 170; // Espacio de sobra abajo
             const minLeft = 20;
             const maxLeft = window.innerWidth - anchoBoton - 20;
 
@@ -313,23 +315,29 @@
             moverBotonAleatoriamente();
         });
 
-        // --- CORREGIDO: MACRO DE RECARGA MANUAL (PULL-TO-REFRESH ASISTIDO) ---
+        // --- CORREGIDO: CALIBRACIÓN DEL PULL-TO-REFRESH ---
         let inicioY = 0;
+        let esZonaValida = false;
+
         window.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 1) inicioY = e.touches[0].clientY;
+            if (e.touches.length === 1) {
+                inicioY = e.touches[0].clientY;
+                // Solo permite el gesto si inicia en la mitad superior de la pantalla
+                esZonaValida = inicioY < (window.innerHeight / 2);
+            }
         }, { passive: true });
 
         window.addEventListener('touchmove', (e) => {
-            if (e.touches.length === 1) {
+            if (e.touches.length === 1 && esZonaValida) {
                 const cambioY = e.touches[0].clientY - inicioY;
-                // Si el usuario arrastra el dedo hacia abajo más de 140px, fuerza la recarga
-                if (cambioY > 140) {
+                // Arrastre firme hacia abajo de más de 150px
+                if (cambioY > 150) {
                     window.location.reload();
                 }
             }
         }, { passive: true });
 
-        // --- SISTEMA DE CORAZONES FLOTANTES 3D TOTALES ---
+        // --- SISTEMA DE CORAZONES FLOTANTES 3D ---
         const canvas = document.getElementById("corazonesCanvas");
         const ctx = canvas.getContext("2d");
         let ancho = canvas.width = window.innerWidth;
