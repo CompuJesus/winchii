@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡Feliz Cumpleaños Wilmar! 🎉</title>
+    <title>Feliz cumpleaños Wilmar 🎉</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
     
     <link href="https://fonts.googleapis.com/css2?family=Gluten:wght@700&display=swap" rel="stylesheet">
     
     <style>
-        /* Fondo psicodélico */
+        /* Fondo psicodélico base */
         body {
             margin: 0;
             padding: 0;
@@ -54,7 +54,7 @@
 
         /* Estilo base para los textos */
         .texto-cambiante {
-            font-size: 2.8rem; /* Bajado un pelín para que "CUMPLEAÑOS" entre perfecto en cualquier móvil */
+            font-size: 2.8rem;
             color: #fff;
             text-transform: uppercase;
             margin: 0;
@@ -79,16 +79,16 @@
             animation: vibrar 0.15s linear infinite;
         }
 
-        /* Estilo para la imagen sorpresa del final */
+        /* FOTO CAMBIADA: Totalmente adaptada a pantalla completa */
         .foto-sorpresa {
             display: none;
-            width: 140px;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 5px solid #fff;
-            box-shadow: 0 0 20px #00ff66;
-            margin-top: 15px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover; /* Hace que llene la pantalla sin deformarse */
+            z-index: -1; /* Se coloca al fondo de todo, simulando un wallpaper */
         }
 
         /* El botón interactivo principal abajo */
@@ -120,7 +120,7 @@
             100% { transform: translateY(-10px); }
         }
 
-        /* Botón pequeño de repetir CORREGIDO */
+        /* Botón pequeño de repetir */
         .boton-repetir {
             display: none; 
             position: absolute;
@@ -130,13 +130,13 @@
             width: 52px;
             height: 52px;
             font-size: 1.6rem;
-            background-color: rgba(255, 255, 255, 0.25);
-            border: 2px solid rgba(255, 255, 255, 0.7);
+            background-color: rgba(255, 255, 255, 0.4); /* Un pelín más opaco para que resalte sobre la foto */
+            border: 2px solid rgba(255, 255, 255, 0.8);
             border-radius: 50%;
             color: white;
             cursor: pointer;
             backdrop-filter: blur(5px);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -145,7 +145,7 @@
 
         .boton-repetir:active {
             transform: rotate(-180deg) scale(0.9);
-            background-color: rgba(255, 255, 255, 0.5);
+            background-color: rgba(255, 255, 255, 0.7);
         }
 
         canvas {
@@ -163,9 +163,10 @@
 
     <canvas id="corazonesCanvas"></canvas>
 
+    <img id="imagenFinal" src="foto.jpg" alt="Foto Sorpresa" class="foto-sorpresa">
+
     <div class="contenedor-contenido">
         <h1 id="textoPrincipal" class="texto-cambiante">¡FELIZ<br>CUMPLEAÑOS!</h1>
-        <img id="imagenFinal" src="foto.jpg" alt="Foto Sorpresa" class="foto-sorpresa">
     </div>
 
     <button id="btnSiguiente" class="boton-aleatorio">¡DALE DURO AQUÍ! 💥</button>
@@ -208,7 +209,7 @@
                 textoPrincipal.className = "fuente-burbuja"; 
                 textoPrincipal.innerHTML = "TQQJ";
                 
-                imagenFinal.style.display = "block"; 
+                imagenFinal.style.display = "block"; // Revela la foto ocupando todo el fondo
                 btnSiguiente.style.display = "none"; 
                 btnRepetir.style.display = "flex"; 
             }
@@ -217,7 +218,7 @@
         btnRepetir.addEventListener("click", () => {
             faseActual = 0; 
             textoPrincipal.className = "texto-cambiante";
-            textoPrincipal.innerHTML = "¡FELIZ<br>CUMPLEAÑOS!"; // Modificado aquí también al reiniciar
+            textoPrincipal.innerHTML = "¡FELIZ<br>CUMPLEAÑOS!";
             imagenFinal.style.display = "none";
             btnRepetir.style.display = "none";
             btnSiguiente.style.display = "block";
