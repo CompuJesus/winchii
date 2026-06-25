@@ -40,10 +40,10 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: space-evenly; /* Distribuye equitativamente el espacio */
+            justify-content: space-evenly; 
             align-items: center;
             padding: 20px;
-            z-index: 2;
+            z-index: 2; /* Debajo de los corazones 3D */
             box-sizing: border-box;
         }
 
@@ -85,15 +85,15 @@
             margin: 0;
         }
 
-        /* MARCO REDONDO GIGANTE Y OPTIMIZADO */
+        /* Marco redondo gigante */
         .foto-sorpresa {
             display: none;
-            width: 75vw;         /* Ocupa la mayoría del ancho del dispositivo */
-            height: 75vw;        /* Mantiene la proporción perfectamente circular */
-            max-width: 380px;    /* Límite para que en PC no se vuelva exageradamente gigante */
+            width: 75vw;         
+            height: 75vw;        
+            max-width: 380px;    
             max-height: 380px;
-            object-fit: cover;   /* Evita que la imagen se estire o distorsione */
-            border-radius: 50%;  /* Círculo perfecto */
+            object-fit: cover;   
+            border-radius: 50%;  
             border: 6px solid #fff;
             box-shadow: 0 0 30px #00ff66, 0 0 15px #fff;
             animation: pulsoFoto 1s ease-in-out infinite alternate;
@@ -107,7 +107,7 @@
         /* El botón interactivo principal */
         .boton-aleatorio {
             position: absolute;
-            z-index: 10;
+            z-index: 3; /* Justo debajo del canvas superior para que lo crucen los corazones */
             padding: 15px 30px;
             font-size: 1.1rem;
             font-family: 'Arial Black', sans-serif;
@@ -139,17 +139,17 @@
             position: absolute;
             bottom: 60px;
             right: 25px;
-            z-index: 15;
+            z-index: 15; /* Siempre accesible por encima del canvas */
             width: 52px;
             height: 52px;
             font-size: 1.6rem;
-            background-color: rgba(255, 255, 255, 0.25);
+            background-color: rgba(255, 255, 255, 0.4);
             border: 2px solid rgba(255, 255, 255, 0.7);
             border-radius: 50%;
             color: white;
             cursor: pointer;
             backdrop-filter: blur(5px);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -161,14 +161,15 @@
             background-color: rgba(255, 255, 255, 0.5);
         }
 
+        /* CANVAS MODIFICADO: Capa superior absoluta (Pasa por encima de TODO) */
         canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
-            pointer-events: none;
+            z-index: 100; /* Pasa por encima de textos, imágenes y botones */
+            pointer-events: none; /* Crucial: Permite hacer clic a través de los corazones */
         }
     </style>
 </head>
@@ -224,7 +225,7 @@
                 textoPrincipal.className = "fuente-burbuja"; 
                 textoPrincipal.innerHTML = "TQQJ";
                 
-                imagenFinal.style.display = "block"; // Muestra el gran círculo
+                imagenFinal.style.display = "block"; 
                 btnSiguiente.style.display = "none"; 
                 btnRepetir.style.display = "flex"; 
             }
@@ -241,7 +242,7 @@
             moverBotonAleatoriamente();
         });
 
-        // --- SISTEMA DE CORAZONES ---
+        // --- SISTEMA DE CORAZONES CON EFECTO 3D AVANZADO ---
         const canvas = document.getElementById("corazonesCanvas");
         const ctx = canvas.getContext("2d");
         let ancho = canvas.width = window.innerWidth;
@@ -251,50 +252,85 @@
 
         class Corazon {
             constructor() {
+                this.reiniciar();
+                // Distribución inicial aleatoria para que no salgan todos juntos al cargar
+                this.y = Math.random() * alto; 
+            }
+
+            reiniciar() {
                 this.x = Math.random() * ancho;
-                this.y = alto + Math.random() * 50;
-                this.tamano = Math.random() * 15 + 10;
-                this.velocidadX = Math.random() * 4 - 2;
-                this.velocidadY = Math.random() * -6 - 4;
-                this.gravedad = 0.08;
-                this.opacidad = Math.random() * 0.4 + 0.6;
+                this.y = alto + Math.random() * 40;
+                
+                // LÓGICA 3D: Z representa la distancia (1 es el fondo, 0 es la pantalla del usuario)
+                this.z = Math.random() * 0.7 + 0.3; // Nace al fondo
+                this.velocidadZ = Math.random() * 0.004 + 0.003; // Qué tan rápido se acerca a la cara
+                
+                this.tamanoBase = Math.random() * 10 + 8; // Tamaño cuando está lejos
+                this.velocidadX = Math.random() * 3 - 1.5;
+                this.velocidadY = Math.random() * -4 - 2; // Sube constantemente
+                this.gravedad = 0.04;
+                this.opacidad = Math.random() * 0.3 + 0.7;
             }
 
             actualizar() {
+                // Se acerca en el eje Z (disminuye la distancia hacia la pantalla)
+                this.z -= this.velocidadZ;
+                
                 this.x += this.velocidadX;
                 this.velocidadY += this.gravedad;
                 this.y += this.velocidadY;
 
-                if (this.y > alto + 50 || this.y < -50) {
-                    this.y = alto + 20;
-                    this.velocidadY = Math.random() * -7 - 5;
-                    this.x = Math.random() * ancho;
-                    this.velocidadX = Math.random() * 4 - 2;
+                // Si el corazón se acerca demasiado al "lente" o se sale de los bordes, reinicia
+                if (this.z <= 0.05 || this.y < -100 || this.x < -100 || this.x > ancho + 100) {
+                    this.reiniciar();
                 }
             }
 
             dibujar() {
                 ctx.save();
-                ctx.globalAlpha = this.opacidad;
+                
+                // Efecto tridimensional: El tamaño actual es inversamente proporcional a la distancia Z
+                let escala3D = 1 / this.z;
+                let tamanoFinal = this.tamanoBase * escala3D;
+                
+                // Difuminar un poco los que estén excesivamente cerca para realismo de cámara
+                let alfaFinal = this.opacidad;
+                if (this.z < 0.2) {
+                    alfaFinal *= (this.z / 0.2); // Se desvanece suavemente antes de chocar la pantalla
+                }
+
+                ctx.globalAlpha = Math.max(0, alfaFinal);
                 ctx.fillStyle = "#ff0000";
+                
+                // Añadir una ligera sombra paralela dinámica para acentuar el 3D por encima del contenido
+                ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+                ctx.shadowBlur = escala3D * 2;
+                ctx.shadowOffsetY = escala3D;
+
                 ctx.beginPath();
-                let topY = this.y - this.tamano / 2;
-                ctx.moveTo(this.x, topY + this.tamano / 4);
-                ctx.bezierCurveTo(this.x, topY, this.x - this.tamano / 2, topY, this.x - this.tamano / 2, topY + this.tamano / 4);
-                ctx.bezierCurveTo(this.x - this.tamano / 2, topY + (this.tamano * 5) / 8, this.x, topY + (this.tamano * 7) / 8, this.x, this.y + this.tamano / 2);
-                ctx.bezierCurveTo(this.x, topY + (this.tamano * 7) / 8, this.x + this.tamano / 2, topY + (this.tamano * 5) / 8, this.x + this.tamano / 2, topY + this.tamano / 4);
-                ctx.bezierCurveTo(this.x + this.tamano / 2, topY, this.x, topY, this.x, topY + this.tamano / 4);
+                let topY = this.y - tamanoFinal / 2;
+                ctx.moveTo(this.x, topY + tamanoFinal / 4);
+                ctx.bezierCurveTo(this.x, topY, this.x - tamanoFinal / 2, topY, this.x - tamanoFinal / 2, topY + tamanoFinal / 4);
+                ctx.bezierCurveTo(this.x - tamanoFinal / 2, topY + (tamanoFinal * 5) / 8, this.x, topY + (tamanoFinal * 7) / 8, this.x, this.y + tamanoFinal / 2);
+                ctx.bezierCurveTo(this.x, topY + (tamanoFinal * 7) / 8, this.x + tamanoFinal / 2, topY + (tamanoFinal * 5) / 8, this.x + tamanoFinal / 2, topY + tamanoFinal / 4);
+                ctx.bezierCurveTo(this.x + tamanoFinal / 2, topY, this.x, topY, this.x, topY + tamanoFinal / 4);
                 ctx.fill();
                 ctx.restore();
             }
         }
 
-        for (let i = 0; i < 70; i++) {
+        // Generamos 65 corazones interactivos en perspectiva
+        for (let i = 0; i < 65; i++) {
             corazones.push(new Corazon());
         }
 
         function animar() {
             ctx.clearRect(0, 0, ancho, alto);
+            
+            // Ordenar los corazones para pintar primero los del fondo (Z grande) y al final los de adelante (Z chico)
+            // Esto evita que un corazón del fondo tape erróneamente a uno de adelante
+            corazones.sort((a, b) => b.z - a.z);
+
             corazones.forEach(c => {
                 c.actualizar();
                 c.dibujar();
