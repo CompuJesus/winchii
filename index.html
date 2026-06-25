@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Gluten:wght@700&display=swap" rel="stylesheet">
     
     <style>
-        /* Fondo psicodélico base */
+        /* Fondo psicodélico constante */
         body {
             margin: 0;
             padding: 0;
@@ -34,17 +34,22 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Contenedor del contenido superior */
+        /* Contenedor del contenido (Texto arriba, foto abajo) */
         .contenedor-contenido {
-            height: 60vh;
+            width: 100%;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-evenly; /* Distribuye equitativamente el espacio */
             align-items: center;
             padding: 20px;
             z-index: 2;
-            animation: pulsoLuces 0.5s linear infinite alternate;
             box-sizing: border-box;
+        }
+
+        /* Efecto de luces parpadeantes exclusivo para el texto */
+        .luces-texto {
+            animation: pulsoLuces 0.5s linear infinite alternate;
         }
 
         @keyframes pulsoLuces {
@@ -52,7 +57,7 @@
             100% { filter: drop-shadow(0 0 35px #00f0ff) drop-shadow(0 0 45px #7f00ff); }
         }
 
-        /* Estilo base para los textos */
+        /* Estilo base para los textos iniciales */
         .texto-cambiante {
             font-size: 2.8rem;
             color: #fff;
@@ -69,7 +74,7 @@
             100% { transform: translate(-1px, -2px) rotate(1deg); }
         }
 
-        /* Clase para TQQJ */
+        /* Clase limpia para TQQJ arriba */
         .fuente-burbuja {
             font-family: 'Gluten', cursive !important;
             font-size: 4.5rem !important;
@@ -77,21 +82,29 @@
             letter-spacing: 0px !important;
             text-shadow: 4px 4px 0px #00f0ff, -3px -3px 0px #7f00ff !important;
             animation: vibrar 0.15s linear infinite;
+            margin: 0;
         }
 
-        /* FOTO CAMBIADA: Totalmente adaptada a pantalla completa */
+        /* MARCO REDONDO GIGANTE Y OPTIMIZADO */
         .foto-sorpresa {
             display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover; /* Hace que llene la pantalla sin deformarse */
-            z-index: -1; /* Se coloca al fondo de todo, simulando un wallpaper */
+            width: 75vw;         /* Ocupa la mayoría del ancho del dispositivo */
+            height: 75vw;        /* Mantiene la proporción perfectamente circular */
+            max-width: 380px;    /* Límite para que en PC no se vuelva exageradamente gigante */
+            max-height: 380px;
+            object-fit: cover;   /* Evita que la imagen se estire o distorsione */
+            border-radius: 50%;  /* Círculo perfecto */
+            border: 6px solid #fff;
+            box-shadow: 0 0 30px #00ff66, 0 0 15px #fff;
+            animation: pulsoFoto 1s ease-in-out infinite alternate;
         }
 
-        /* El botón interactivo principal abajo */
+        @keyframes pulsoFoto {
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px #00ff66); }
+            100% { transform: scale(1.03); filter: drop-shadow(0 0 25px #00ffff); }
+        }
+
+        /* El botón interactivo principal */
         .boton-aleatorio {
             position: absolute;
             z-index: 10;
@@ -120,7 +133,7 @@
             100% { transform: translateY(-10px); }
         }
 
-        /* Botón pequeño de repetir */
+        /* Botón de repetir flotante */
         .boton-repetir {
             display: none; 
             position: absolute;
@@ -130,13 +143,13 @@
             width: 52px;
             height: 52px;
             font-size: 1.6rem;
-            background-color: rgba(255, 255, 255, 0.4); /* Un pelín más opaco para que resalte sobre la foto */
-            border: 2px solid rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.7);
             border-radius: 50%;
             color: white;
             cursor: pointer;
             backdrop-filter: blur(5px);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -145,7 +158,7 @@
 
         .boton-repetir:active {
             transform: rotate(-180deg) scale(0.9);
-            background-color: rgba(255, 255, 255, 0.7);
+            background-color: rgba(255, 255, 255, 0.5);
         }
 
         canvas {
@@ -163,10 +176,12 @@
 
     <canvas id="corazonesCanvas"></canvas>
 
-    <img id="imagenFinal" src="foto.jpg" alt="Foto Sorpresa" class="foto-sorpresa">
-
     <div class="contenedor-contenido">
-        <h1 id="textoPrincipal" class="texto-cambiante">¡FELIZ<br>CUMPLEAÑOS!</h1>
+        <div class="luces-texto">
+            <h1 id="textoPrincipal" class="texto-cambiante">¡FELIZ<br>CUMPLEAÑOS!</h1>
+        </div>
+        
+        <img id="imagenFinal" src="foto.jpg" alt="Foto Sorpresa" class="foto-sorpresa">
     </div>
 
     <button id="btnSiguiente" class="boton-aleatorio">¡DALE DURO AQUÍ! 💥</button>
@@ -185,7 +200,7 @@
 
         function moverBotonAleatoriamente() {
             const minTop = window.innerHeight / 2;
-            const maxTop = window.innerHeight - 100;
+            const maxTop = window.innerHeight - 120;
             const maxLeft = window.innerWidth - 180;
 
             const randomTop = Math.floor(Math.random() * (maxTop - minTop)) + minTop;
@@ -209,7 +224,7 @@
                 textoPrincipal.className = "fuente-burbuja"; 
                 textoPrincipal.innerHTML = "TQQJ";
                 
-                imagenFinal.style.display = "block"; // Revela la foto ocupando todo el fondo
+                imagenFinal.style.display = "block"; // Muestra el gran círculo
                 btnSiguiente.style.display = "none"; 
                 btnRepetir.style.display = "flex"; 
             }
